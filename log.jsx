@@ -8,7 +8,7 @@ class Log extends React.Component {
 
   render() {
     return (
-      <div className="log-line">
+      <div className={"log-line severity-" + this.props.type.toUpperCase()}>
         <div className="log-block">
           {
             this.props.metadata == null ? null : <a href="javascript:void(0)" title="Expand Metadata Section" className="metadata-icon icon-plus-sign" />
@@ -57,7 +57,7 @@ class Logger extends React.Component {
 
           if ('e' in logData) {
             try {
-              metadata = JSON.stringify( logData[metadataKey], null, 4 );
+              metadata = JSON.stringify( logData['e'], null, 4 );
             }
             catch( err ) {
               metadata = "JSON.stringify error: " + err;

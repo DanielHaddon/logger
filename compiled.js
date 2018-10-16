@@ -27,7 +27,7 @@ var Log = function (_React$Component) {
     value: function render() {
       return React.createElement(
         "div",
-        { className: "log-line" },
+        { className: "log-line severity-" + this.props.type.toUpperCase() },
         React.createElement(
           "div",
           { className: "log-block" },
@@ -98,7 +98,7 @@ var Logger = function (_React$Component2) {
 
           if ('e' in logData) {
             try {
-              metadata = JSON.stringify(logData[metadataKey], null, 4);
+              metadata = JSON.stringify(logData['e'], null, 4);
             } catch (err) {
               metadata = "JSON.stringify error: " + err;
             }
