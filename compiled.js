@@ -96,7 +96,7 @@ var Logger = function (_React$Component2) {
           var message = logData.m == null ? "" : logData.m;
           var metadata = "";
 
-          if (metadataKey in logData) {
+          if ('e' in logData) {
             try {
               metadata = JSON.stringify(logData[metadataKey], null, 4);
             } catch (err) {

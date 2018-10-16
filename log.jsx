@@ -55,7 +55,7 @@ class Logger extends React.Component {
           let message = logData.m == null ? "" : logData.m;
           let metadata = "";
 
-          if (metadataKey in logData) {
+          if ('e' in logData) {
             try {
               metadata = JSON.stringify( logData[metadataKey], null, 4 );
             }
