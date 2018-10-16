@@ -116,7 +116,11 @@ var Logger = function (_React$Component2) {
   _createClass(Logger, [{
     key: "render",
     value: function render() {
-      return React.createElement("div", null);
+      return React.createElement(
+        "div",
+        null,
+        this.state.logs
+      );
     }
   }]);
 

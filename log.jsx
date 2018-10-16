@@ -75,7 +75,7 @@ class Logger extends React.Component {
   render() {
     return (
       <div>
-        
+        {this.state.logs}
       </div>
     );
   }
