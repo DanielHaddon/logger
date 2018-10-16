@@ -27,7 +27,7 @@ var Log = function (_React$Component) {
     value: function render() {
       return React.createElement(
         "div",
-        { className: "log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") },
+        { className: "log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.hidden == null ? " hidden" : "") },
         React.createElement(
           "div",
           { className: "log-block" },
@@ -138,8 +138,8 @@ var Logger = function (_React$Component2) {
       var filter = this.state.filter;
 
       if (filter != null && filter.length > 0) {
-        filteredLogs = this.state.logs.filter(function (r) {
-          return r.message.toLowerCase().includes(filter);
+        filteredLogs = this.state.logs.map(function (l) {
+          l.hidden = !r.message.toLowerCase().includes(filter);
         });
       } else {
         filteredLogs = this.state.logs;
@@ -154,7 +154,7 @@ var Logger = function (_React$Component2) {
         for (var _iterator = filteredLogs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var log = _step.value;
 
-          logs.push(React.createElement(Log, { date: log.date, time: log.time, type: log.type, message: log.message, metadata: log.metadata }));
+          logs.push(React.createElement(Log, { hidden: log.hidden, date: log.date, time: log.time, type: log.type, message: log.message, metadata: log.metadata }));
         }
       } catch (err) {
         _didIteratorError = true;

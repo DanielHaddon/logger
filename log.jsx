@@ -8,7 +8,7 @@ class Log extends React.Component {
 
   render() {
     return (
-      <div className={"log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a")}>
+      <div className={"log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.hidden == null ? " hidden" : "")}>
         <div className="log-block">
           {
             this.props.metadata == null ? null : <a href="javascript:void(0)" title="Expand Metadata Section" className="metadata-icon icon-plus-sign" />
@@ -22,7 +22,7 @@ class Log extends React.Component {
           this.props.metadata == null ? null : <div className="metadata-block">
             {this.props.metadata}
           </div>
-        }        
+        }
       </div>
     );
   }
@@ -94,8 +94,8 @@ class Logger extends React.Component {
     let filter = this.state.filter;
 
     if (filter != null && filter.length > 0) {
-      filteredLogs = this.state.logs.filter(function (r) {
-        return r.message.toLowerCase().includes(filter);
+      filteredLogs = this.state.logs.map((l) => {
+        l.hidden = !r.message.toLowerCase().includes(filter)
       });
     } else {
       filteredLogs = this.state.logs;
@@ -103,7 +103,7 @@ class Logger extends React.Component {
 
     let logs = [];
     for(let log of filteredLogs) {
-      logs.push(<Log date={log.date} time={log.time} type={log.type} message={log.message} metadata={log.metadata} />);
+      logs.push(<Log hidden={log.hidden} date={log.date} time={log.time} type={log.type} message={log.message} metadata={log.metadata} />);
     }
 
     return (
