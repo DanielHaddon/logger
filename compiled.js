@@ -44,7 +44,7 @@ import('https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js').then(
       value: function render() {
         return React.createElement(
           "div",
-          { onClick: this.handleOnClick, className: "log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.hidden ? " hidden" : "") },
+          { onClick: this.handleOnClick.bind(this), className: "log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.hidden ? " hidden" : "") },
           React.createElement(
             "div",
             { className: "log-block" },
