@@ -1,123 +1,134 @@
 LogViewer.OutputPane.prototype.add = function( /*Map*/ data ) {}
 
-class Log extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+$(".fetch-actions").append('<button onclick="window.clearLog()" id="clearLog" class="clear-logs">Clear Log</button>');
+$(".filter-actions").append('<div class="filter-text"><input placeholder="Search..." id="filterText"/></div>');
+$(".log-output-container").empty();
 
-  render() {
-    return (
-      <div className={"log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.hidden ? " hidden" : "")}>
-        <div className="log-block">
-          {
-            this.props.metadata == null ? null : <a href="javascript:void(0)" title="Expand Metadata Section" className="metadata-icon icon-plus-sign" />
-          }
-          <span className="date">{this.props.date}</span>
-          <span className="time">{this.props.time}</span>
-          <span className="type">{this.props.type}</span>
-          <span className="message">{this.props.message}</span>
-        </div>
-        {
-          this.props.metadata == null ? null : <div className="metadata-block">
-            {this.props.metadata}
+window.logOutputContainer = $(".log-output-container")[0];
+window.filterTextInput = document.getElementById("filterText");
+
+import('https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js')
+.then(renderedScripty => {
+
+  class Log extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {};
+    }
+
+    render() {
+      return (
+        <div className={"log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.hidden ? " hidden" : "")}>
+          <div className="log-block">
+            {
+              this.props.metadata == null ? null : <a href="javascript:void(0)" title="Expand Metadata Section" className="metadata-icon icon-plus-sign" />
+            }
+            <span className="date">{this.props.date}</span>
+            <span className="time">{this.props.time}</span>
+            <span className="type">{this.props.type}</span>
+            <span className="message">{this.props.message}</span>
           </div>
-        }
-      </div>
-    );
-  }
-}
-
-class Logger extends React.Component {
-  constructor(props) {
-    super(props);
-    window.logger = this;
-    var me = this;
-    me.state = { logs: [] };
-
-    LogViewer.OutputPane.prototype.add = function( /*Map*/ data ) {
-      if (!data.lines || data.lines.length === 0)
-      {
-        return;
-      }
-
-      let newLogs = me.state.logs;
-
-      for (var line = 0; line < data.lines.length; line++) {
-        var logData = data.lines[ line ];
-
-        if ('break' in logData) {
-          return { 'html': logString + logData.break };
-        } else {
-
-          let date = logData.d == null ? "" : logData.d;
-          let time = logData.t == null ? "" : logData.t;
-          let type = logData.v == null ? "" : logData.v;
-          let message = logData.m == null ? "" : logData.m;
-          let metadata = "";
-
-          if ('e' in logData) {
-            try {
-              metadata = JSON.stringify( logData['e'], null, 4 );
-            }
-            catch( err ) {
-              metadata = "JSON.stringify error: " + err;
-            }
+          {
+            this.props.metadata == null ? null : <div className="metadata-block">
+              {this.props.metadata}
+            </div>
           }
+        </div>
+      );
+    }
+  }
 
-          newLogs.push({
-            date: date,
-            time: time,
-            type: type,
-            message: message,
-            metadata: metadata,
-            hidden: false
-          });
+  class Logger extends React.Component {
+    constructor(props) {
+      super(props);
+      window.logger = this;
+      var me = this;
+      me.state = { logs: [] };
+
+      LogViewer.OutputPane.prototype.add = function( /*Map*/ data ) {
+        if (!data.lines || data.lines.length === 0)
+        {
+          return;
         }
+
+        let newLogs = me.state.logs;
+
+        for (var line = 0; line < data.lines.length; line++) {
+          var logData = data.lines[ line ];
+
+          if ('break' in logData) {
+            return { 'html': logString + logData.break };
+          } else {
+
+            let date = logData.d == null ? "" : logData.d;
+            let time = logData.t == null ? "" : logData.t;
+            let type = logData.v == null ? "" : logData.v;
+            let message = logData.m == null ? "" : logData.m;
+            let metadata = "";
+
+            if ('e' in logData) {
+              try {
+                metadata = JSON.stringify( logData['e'], null, 4 );
+              }
+              catch( err ) {
+                metadata = "JSON.stringify error: " + err;
+              }
+            }
+
+            newLogs.push({
+              date: date,
+              time: time,
+              type: type,
+              message: message,
+              metadata: metadata,
+              hidden: false
+            });
+          }
+        }
+
+        me.setState({logs: newLogs});
+      };
+
+      $('#filterText').on('input',function(e){
+        var text = e.target.value.toLowerCase();
+        me.setState({filter: text});
+      });
+
+      window.clearLog = me.clear;
+    }
+
+    clear() {
+      window.logger.setState({logs: []});
+    }
+
+    render() {
+      let filteredLogs = [];
+      let filter = this.state.filter;
+
+      if (filter != null && filter.length > 0) {
+        filteredLogs = this.state.logs.map((l) => {
+          l.hidden = !l.message.toLowerCase().includes(filter);
+          return l;
+        });
+      } else {
+        filteredLogs = this.state.logs;
       }
 
-      me.setState({logs: newLogs});
-    };
+      let logs = [];
+      for(let log of filteredLogs) {
+        logs.push(<Log hidden={log.hidden} date={log.date} time={log.time} type={log.type} message={log.message} metadata={log.metadata} />);
+      }
 
-    $('#filterText').on('input',function(e){
-      var text = e.target.value.toLowerCase();
-      me.setState({filter: text});
-    });
-
-    window.clearLog = me.clear;
-  }
-
-  clear() {
-    window.logger.setState({logs: []});
-  }
-
-  render() {
-    let filteredLogs = [];
-    let filter = this.state.filter;
-
-    if (filter != null && filter.length > 0) {
-      filteredLogs = this.state.logs.map((l) => {
-        l.hidden = !l.message.toLowerCase().includes(filter);
-        return l;
-      });
-    } else {
-      filteredLogs = this.state.logs;
+      return (
+        <div className="log-output">
+          {logs}
+        </div>
+      );
     }
-
-    let logs = [];
-    for(let log of filteredLogs) {
-      logs.push(<Log hidden={log.hidden} date={log.date} time={log.time} type={log.type} message={log.message} metadata={log.metadata} />);
-    }
-
-    return (
-      <div className="log-output">
-        {logs}
-      </div>
-    );
   }
-}
 
-React.render(<Logger />, window.logOutputContainer);
+  React.render(<Logger />, window.logOutputContainer);
+});
 
 var styleEl = document.createElement('style');
 styleEl.innerHTML = `
@@ -255,6 +266,16 @@ styleEl.innerHTML = `
 
   .log-output .log-line.severity-WARNING.has-a:hover .metadata-block {
     background: #e6bf31 !important;
+  }
+
+  @keyframes flash {
+    0% { opacity: 0; }  
+    50% { opacity: 1; background: #9e9ede; }
+    100% { opacity: 1; background: transparent; }
+  }
+
+  .log-line {
+    animation: flash linear 0.6s;
   }
 
 `;
