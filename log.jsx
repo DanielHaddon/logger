@@ -91,10 +91,11 @@ class Logger extends React.Component {
 
   render() {
     let filteredLogs = [];
+    let filter = this.state.filter;
 
-    if (this.state.filter != null && this.state.filter.length > 0) {
+    if (filter != null && filter.length > 0) {
       filteredLogs = this.state.logs.filter(function (r) {
-        return r.message.toLowerCase().includes(this.state.filter);
+        return r.message.toLowerCase().includes(filter);
       });
     } else {
       filteredLogs = this.state.logs;
