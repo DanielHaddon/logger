@@ -27,7 +27,7 @@ var Log = function (_React$Component) {
     value: function render() {
       return React.createElement(
         "div",
-        { className: "log-line severity-" + this.props.type.toUpperCase() },
+        { className: "log-line severity-" + this.props.type.toUpperCase() + this.props.metadata == null ? "" : " has-a" },
         React.createElement(
           "div",
           { className: "log-block" },
@@ -104,22 +104,76 @@ var Logger = function (_React$Component2) {
             }
           }
 
-          newLogs.push(React.createElement(Log, { date: date, time: time, type: type, message: message, metadata: metadata }));
+          newLogs.push({
+            date: date,
+            time: time,
+            type: type,
+            message: message,
+            metadata: metadata
+          });
         }
       }
 
       me.setState({ logs: newLogs });
     };
+
+    $('#filterText').on('input', function (e) {
+      var text = e.target.value.toLowerCase();
+      me.setState({ filter: text });
+    });
+
+    window.clearLog = _this2.clear;
     return _this2;
   }
 
   _createClass(Logger, [{
+    key: "clear",
+    value: function clear() {
+      this.setState({ logs: [] });
+    }
+  }, {
     key: "render",
     value: function render() {
+      var filteredLogs = [];
+
+      if (this.state.filter != null && this.state.filter.length > 0) {
+        filteredLogs = this.state.logs.filter(function (r) {
+          return r.message.toLowerCase().includes(this.state.filter);
+        });
+      } else {
+        filteredLogs = this.state.logs;
+      }
+
+      var logs = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = filteredLogs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var log = _step.value;
+
+          logs.push(React.createElement(Log, { date: log.date, time: log.time, type: log.type, message: log.message, metadata: log.metadata }));
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
       return React.createElement(
         "div",
         { className: "log-output" },
-        this.state.logs
+        logs
       );
     }
   }]);

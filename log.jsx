@@ -8,7 +8,7 @@ class Log extends React.Component {
 
   render() {
     return (
-      <div className={"log-line severity-" + this.props.type.toUpperCase()}>
+      <div className={"log-line severity-" + this.props.type.toUpperCase() + this.props.metadata == null ? "" : " has-a"}>
         <div className="log-block">
           {
             this.props.metadata == null ? null : <a href="javascript:void(0)" title="Expand Metadata Section" className="metadata-icon icon-plus-sign" />
@@ -64,18 +64,50 @@ class Logger extends React.Component {
             }
           }
 
-          newLogs.push(<Log date={date} time={time} type={type} message={message} metadata={metadata} />);
+          newLogs.push({
+            date: date,
+            time: time,
+            type: type,
+            message: message,
+            metadata: metadata
+          });
         }
       }
 
       me.setState({logs: newLogs});
     };
+
+    $('#filterText').on('input',function(e){
+      var text = e.target.value.toLowerCase();
+      me.setState({filter: text});
+    });
+
+    window.clearLog = this.clear;
+  }
+
+  clear() {
+    this.setState({logs: []});
   }
 
   render() {
+    let filteredLogs = [];
+
+    if (this.state.filter != null && this.state.filter.length > 0) {
+      filteredLogs = this.state.logs.filter(function (r) {
+        return r.message.toLowerCase().includes(this.state.filter);
+      });
+    } else {
+      filteredLogs = this.state.logs;
+    }
+
+    let logs = [];
+    for(let log of filteredLogs) {
+      logs.push(<Log date={log.date} time={log.time} type={log.type} message={log.message} metadata={log.metadata} />);
+    }
+
     return (
       <div className="log-output">
-        {this.state.logs}
+        {logs}
       </div>
     );
   }
