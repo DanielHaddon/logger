@@ -1,1 +1,0 @@
-alert("What the hell");
