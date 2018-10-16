@@ -8,7 +8,7 @@ class Log extends React.Component {
 
   render() {
     return (
-      <div className={"log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.hidden == null ? " hidden" : "")}>
+      <div className={"log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.hidden ? " hidden" : "")}>
         <div className="log-block">
           {
             this.props.metadata == null ? null : <a href="javascript:void(0)" title="Expand Metadata Section" className="metadata-icon icon-plus-sign" />
@@ -95,7 +95,7 @@ class Logger extends React.Component {
 
     if (filter != null && filter.length > 0) {
       filteredLogs = this.state.logs.map((l) => {
-        l.hidden = !r.message.toLowerCase().includes(filter)
+        l.hidden = !l.message.toLowerCase().includes(filter);
       });
     } else {
       filteredLogs = this.state.logs;

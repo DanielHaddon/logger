@@ -27,7 +27,7 @@ var Log = function (_React$Component) {
     value: function render() {
       return React.createElement(
         "div",
-        { className: "log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.hidden == null ? " hidden" : "") },
+        { className: "log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.hidden ? " hidden" : "") },
         React.createElement(
           "div",
           { className: "log-block" },
@@ -139,7 +139,7 @@ var Logger = function (_React$Component2) {
 
       if (filter != null && filter.length > 0) {
         filteredLogs = this.state.logs.map(function (l) {
-          l.hidden = !r.message.toLowerCase().includes(filter);
+          l.hidden = !l.message.toLowerCase().includes(filter);
         });
       } else {
         filteredLogs = this.state.logs;
