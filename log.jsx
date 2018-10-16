@@ -29,7 +29,7 @@ import('https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js')
         <div onClick={this.handleOnClick.bind(this)} className={"log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.hidden ? " hidden" : "")}>
           <div className="log-block">
             {
-              this.props.metadata == null ? null : !this.state.expanded ? <a href="#" title="Expand Metadata Section" className="metadata-icon icon-plus-sign" /> : <a href="#" title="Collapse Metadata Section" className="metadata-icon icon-minus-sign" />
+              this.props.metadata == null || this.props.metadata.length == 0 ? null : !this.state.expanded ? <a href="#" title="Expand Metadata Section" className="metadata-icon icon-plus-sign" /> : <a href="#" title="Collapse Metadata Section" className="metadata-icon icon-minus-sign" />
             }
             <span className="date">{this.props.date}</span>
             <span className="time">{this.props.time}</span>
@@ -284,6 +284,10 @@ styleEl.innerHTML = `
 
   .log-line {
     animation: flash linear 0.6s;
+  }
+
+  .log-output .metadata-block {
+    display: block !important;
   }
 
 `;
