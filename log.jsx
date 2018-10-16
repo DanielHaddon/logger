@@ -1,18 +1,85 @@
-/*
- * A simple React component
- */
-class Application extends React.Component {
-    render() {
-      return <div>
-        <h1>Hello, ES6 and React 0.13!</h1>
-        <p>
-          More info <a href="https://github.com/bradleyboy/codepen-react" target="_blank">here</a>.
-        </p>
-      </div>;
-    }
+LogViewer.OutputPane.prototype.add = function( /*Map*/ data ) {}
+
+class Log extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
   }
-  
-  /*
-   * Render the above component into the div#app
-   */
-  React.render(<Application />, window.logOutput);
+
+  render() {
+    return (
+      <div className="log-line">
+        <div className="log-block">
+          {
+            this.props.metadata == null ? null : <a href="javascript:void(0)" title="Expand Metadata Section" className="metadata-icon icon-plus-sign" />
+          }
+          <span className="date">{this.props.date}</span>
+          <span className="time">{this.props.time}</span>
+          <span className="type">{this.props.type}</span>
+          <span className="message">{this.props.message}</span>
+        </div>
+        {
+          this.props.metadata == null ? null : <div className="metadata-block">
+            {this.props.metadata}
+          </div>
+        }        
+      </div>
+    );
+  }
+}
+
+class Logger extends React.Component {
+  constructor(props) {
+    super(props);
+    var me = this;
+    me.state = { logs: [] };
+
+    LogViewer.OutputPane.prototype.add = function( /*Map*/ data ) {
+      if (!data.lines || data.lines.length === 0)
+      {
+        return;
+      }
+
+      let newLogs = me.state.logs;
+
+      for (var line = 0; line < data.lines.length; line++) {
+        var logData = data.lines[ line ];
+
+        if ('break' in logData) {
+          return { 'html': logString + logData.break };
+        } else {
+
+          let date = logData.d == null ? "" : logData.d;
+          let time = logData.t == null ? "" : logData.t;
+          let type = logData.v == null ? "" : logData.v;
+          let message = logData.m == null ? "" : logData.m;
+          let metadata = "";
+
+          if (metadataKey in logData) {
+            try {
+              metadata = JSON.stringify( logData[metadataKey], null, 4 );
+            }
+            catch( err ) {
+              metadata = "JSON.stringify error: " + err;
+            }
+          }
+
+          logs.push(<Log date={date} time={time} type={type} message={message} metadata={metadata} />);
+
+        }
+      }
+
+      me.setState({logs: newLogs});
+    };
+  }
+
+  render() {
+    return (
+      <div>
+        
+      </div>
+    );
+  }
+}
+
+React.render(<Logger />, window.logOutput);
