@@ -26,20 +26,29 @@ import('https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js').then(
 
       var _this = _possibleConstructorReturn(this, (Log.__proto__ || Object.getPrototypeOf(Log)).call(this, props));
 
-      _this.state = {};
+      _this.state = { expanded: false };
       return _this;
     }
 
     _createClass(Log, [{
+      key: "handleOnClick",
+      value: function handleOnClick() {
+        if (this.props.metadata == null || this.props.metadata.length == 0) {
+          return;
+        }
+
+        this.setState({ expanded: !this.state.expanded });
+      }
+    }, {
       key: "render",
       value: function render() {
         return React.createElement(
           "div",
-          { className: "log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.hidden ? " hidden" : "") },
+          { onClick: this.handleOnClick, className: "log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.hidden ? " hidden" : "") },
           React.createElement(
             "div",
             { className: "log-block" },
-            this.props.metadata == null ? null : React.createElement("a", { href: "javascript:void(0)", title: "Expand Metadata Section", className: "metadata-icon icon-plus-sign" }),
+            this.props.metadata == null ? null : !this.state.expanded ? React.createElement("a", { href: "#", title: "Expand Metadata Section", className: "metadata-icon icon-plus-sign" }) : React.createElement("a", { href: "#", title: "Collapse Metadata Section", className: "metadata-icon icon-minus-sign" }),
             React.createElement(
               "span",
               { className: "date" },
@@ -61,7 +70,7 @@ import('https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js').then(
               this.props.message
             )
           ),
-          this.props.metadata == null ? null : React.createElement(
+          !this.state.expanded || this.props.metadata == null || this.props.metadata.length == 0 ? null : React.createElement(
             "div",
             { className: "metadata-block" },
             this.props.metadata
