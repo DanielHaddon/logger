@@ -69,7 +69,8 @@ class Logger extends React.Component {
             time: time,
             type: type,
             message: message,
-            metadata: metadata
+            metadata: metadata,
+            hidden: false
           });
         }
       }
@@ -82,7 +83,7 @@ class Logger extends React.Component {
       me.setState({filter: text});
     });
 
-    window.clearLog = this.clear;
+    window.clearLog = me.clear;
   }
 
   clear() {
@@ -96,6 +97,7 @@ class Logger extends React.Component {
     if (filter != null && filter.length > 0) {
       filteredLogs = this.state.logs.map((l) => {
         l.hidden = !l.message.toLowerCase().includes(filter);
+        return l;
       });
     } else {
       filteredLogs = this.state.logs;

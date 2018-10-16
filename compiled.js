@@ -109,7 +109,8 @@ var Logger = function (_React$Component2) {
             time: time,
             type: type,
             message: message,
-            metadata: metadata
+            metadata: metadata,
+            hidden: false
           });
         }
       }
@@ -122,7 +123,7 @@ var Logger = function (_React$Component2) {
       me.setState({ filter: text });
     });
 
-    window.clearLog = _this2.clear;
+    window.clearLog = me.clear;
     return _this2;
   }
 
@@ -140,6 +141,7 @@ var Logger = function (_React$Component2) {
       if (filter != null && filter.length > 0) {
         filteredLogs = this.state.logs.map(function (l) {
           l.hidden = !l.message.toLowerCase().includes(filter);
+          return l;
         });
       } else {
         filteredLogs = this.state.logs;
