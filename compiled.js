@@ -118,7 +118,7 @@ var Logger = function (_React$Component2) {
     value: function render() {
       return React.createElement(
         "div",
-        null,
+        { className: "log-output" },
         this.state.logs
       );
     }
@@ -127,4 +127,4 @@ var Logger = function (_React$Component2) {
   return Logger;
 }(React.Component);
 
-React.render(React.createElement(Logger, null), window.logOutput);
+React.render(React.createElement(Logger, null), window.logOutputContainer);

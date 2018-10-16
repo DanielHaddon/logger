@@ -74,11 +74,11 @@ class Logger extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="log-output">
         {this.state.logs}
       </div>
     );
   }
 }
 
-React.render(<Logger />, window.logOutput);
+React.render(<Logger />, window.logOutputContainer);
