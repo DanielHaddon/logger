@@ -27,7 +27,7 @@ var Log = function (_React$Component) {
     value: function render() {
       return React.createElement(
         "div",
-        { className: "log-line severity-" + this.props.type.toUpperCase() + this.props.metadata == null ? "" : " has-a" },
+        { className: "log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") },
         React.createElement(
           "div",
           { className: "log-block" },
