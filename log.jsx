@@ -64,8 +64,7 @@ class Logger extends React.Component {
             }
           }
 
-          logs.push(<Log date={date} time={time} type={type} message={message} metadata={metadata} />);
-
+          newLogs.push(<Log date={date} time={time} type={type} message={message} metadata={metadata} />);
         }
       }
 

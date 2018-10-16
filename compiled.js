@@ -104,7 +104,7 @@ var Logger = function (_React$Component2) {
             }
           }
 
-          logs.push(React.createElement(Log, { date: date, time: time, type: type, message: message, metadata: metadata }));
+          newLogs.push(React.createElement(Log, { date: date, time: time, type: type, message: message, metadata: metadata }));
         }
       }
 
