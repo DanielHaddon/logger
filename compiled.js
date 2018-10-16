@@ -73,6 +73,7 @@ var Logger = function (_React$Component2) {
 
     var _this2 = _possibleConstructorReturn(this, (Logger.__proto__ || Object.getPrototypeOf(Logger)).call(this, props));
 
+    window.logger = _this2;
     var me = _this2;
     me.state = { logs: [] };
 
@@ -130,7 +131,7 @@ var Logger = function (_React$Component2) {
   _createClass(Logger, [{
     key: "clear",
     value: function clear() {
-      this.setState({ logs: [] });
+      window.logger.setState({ logs: [] });
     }
   }, {
     key: "render",
@@ -185,3 +186,7 @@ var Logger = function (_React$Component2) {
 }(React.Component);
 
 React.render(React.createElement(Logger, null), window.logOutputContainer);
+
+var styleEl = document.createElement('style');
+styleEl.innerHTML = "\n  .log-block {\n    padding-left: 110px;\n    position: relative;\n  }\n\n  .log-output .metadata-icon {\n    opacity: 0.4;\n    top: 8px;\n    left: 7px !important;\n  }\n\n  .log-block span {\n      display: inline-block;\n      overflow: hidden;\n      padding: 2px 0;\n      min-height: 26px;\n      vertical-align: top;\n      padding-left: 18px;\n  }\n\n  .severity-INFO, .severity-TRACE, .severity-NOTICE {\n    opacity:0.4;\n  }\n\n  .filter-actions > * {\n    display: inline-block !important;\n  }\n    \n  .filter-text {\n      vertical-align: middle;\n  }\n\n  .hidden {\n    display: none;\n  }\n\n  .filter-text input {\n    border: 1px solid #aaa;\n      min-width: 150px;\n      width: 30vw;\n      margin-left: 5px;\n      margin-top: 0px;\n      border-radius: 4px;\n      font-size: 12px;\n      padding: 4px 6px;\n  }\n\n  .log-block .date {\n      position: absolute;\n      left: 7px;\n      top: 1px;\n      font-size: 10px;\n      opacity: 0.5;\n  }\n\n  .log-block .time {\n      position: absolute;\n      left: 8px;\n      top: 11px;\n      font-size: 12px;\n      opacity: 1;\n  }\n\n  .log-block .type {\n      opacity: 0.3;\n      font-weight: bold;\n      max-width: 20px;\n  }\n\n  .log-block .message {\n      max-width: 88%;\n      white-space: normal;\n  }\n\n  .log-output .log-line:nth-child( odd ) {\n      background: #fff !important;\n  }\n\n  .log-output .log-line:nth-child( even ) {\n      background: #fff !important;\n  }\n\n  .log-output .log-line.severity-WARNING:nth-child( odd ) {\n      background: #FFED8B !important;\n  }\n\n  .log-output .log-line.severity-WARNING:nth-child( even ) {\n      background: #FFED8B !important;\n  }\n\n  .log-output .log-line {\n    border-bottom: 1px solid #f2f4f6;\n  }\n\n  .log-output .log-line.severity-WARNING {\n    border-bottom: 1px solid #ead876;\n  }\n\n  .log-output {\n    display: flex;\n    flex-direction: column-reverse;\n  }\n\n  .log-output .log-line {\n    cursor: default;\n  }\n\n  .log-output .log-line.has-a {\n    \n  }\n\n  .log-output .log-line.has-a:hover {\n    background: #8bd4f5 !important;\n  }\n  .log-output .log-line.has-a:hover .metadata-block {\n    background: #8bd4f5 !important;\n  }\n\n  .log-output .metadata-block {\n    background-color: transparent !important;\n      max-height: 200px;\n      overflow: auto;\n      display: none;\n      outline: none !important;\n      border-bottom: none !important;\n      padding: 10px 10px !important;\n  }\n\n  .log-output .log-line.severity-WARNING.has-a:hover {\n    background: #e6bf31 !important;\n  }\n\n  .log-output .log-line.severity-WARNING.has-a:hover .metadata-block {\n    background: #e6bf31 !important;\n  }\n\n";
+document.head.appendChild(styleEl);

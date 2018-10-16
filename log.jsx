@@ -31,6 +31,7 @@ class Log extends React.Component {
 class Logger extends React.Component {
   constructor(props) {
     super(props);
+    window.logger = this;
     var me = this;
     me.state = { logs: [] };
 
@@ -87,7 +88,7 @@ class Logger extends React.Component {
   }
 
   clear() {
-    this.setState({logs: []});
+    window.logger.setState({logs: []});
   }
 
   render() {
@@ -117,3 +118,144 @@ class Logger extends React.Component {
 }
 
 React.render(<Logger />, window.logOutputContainer);
+
+var styleEl = document.createElement('style');
+styleEl.innerHTML = `
+  .log-block {
+    padding-left: 110px;
+    position: relative;
+  }
+
+  .log-output .metadata-icon {
+    opacity: 0.4;
+    top: 8px;
+    left: 7px !important;
+  }
+
+  .log-block span {
+      display: inline-block;
+      overflow: hidden;
+      padding: 2px 0;
+      min-height: 26px;
+      vertical-align: top;
+      padding-left: 18px;
+  }
+
+  .severity-INFO, .severity-TRACE, .severity-NOTICE {
+    opacity:0.4;
+  }
+
+  .filter-actions > * {
+    display: inline-block !important;
+  }
+    
+  .filter-text {
+      vertical-align: middle;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .filter-text input {
+    border: 1px solid #aaa;
+      min-width: 150px;
+      width: 30vw;
+      margin-left: 5px;
+      margin-top: 0px;
+      border-radius: 4px;
+      font-size: 12px;
+      padding: 4px 6px;
+  }
+
+  .log-block .date {
+      position: absolute;
+      left: 7px;
+      top: 1px;
+      font-size: 10px;
+      opacity: 0.5;
+  }
+
+  .log-block .time {
+      position: absolute;
+      left: 8px;
+      top: 11px;
+      font-size: 12px;
+      opacity: 1;
+  }
+
+  .log-block .type {
+      opacity: 0.3;
+      font-weight: bold;
+      max-width: 20px;
+  }
+
+  .log-block .message {
+      max-width: 88%;
+      white-space: normal;
+  }
+
+  .log-output .log-line:nth-child( odd ) {
+      background: #fff !important;
+  }
+
+  .log-output .log-line:nth-child( even ) {
+      background: #fff !important;
+  }
+
+  .log-output .log-line.severity-WARNING:nth-child( odd ) {
+      background: #FFED8B !important;
+  }
+
+  .log-output .log-line.severity-WARNING:nth-child( even ) {
+      background: #FFED8B !important;
+  }
+
+  .log-output .log-line {
+    border-bottom: 1px solid #f2f4f6;
+  }
+
+  .log-output .log-line.severity-WARNING {
+    border-bottom: 1px solid #ead876;
+  }
+
+  .log-output {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .log-output .log-line {
+    cursor: default;
+  }
+
+  .log-output .log-line.has-a {
+    
+  }
+
+  .log-output .log-line.has-a:hover {
+    background: #8bd4f5 !important;
+  }
+  .log-output .log-line.has-a:hover .metadata-block {
+    background: #8bd4f5 !important;
+  }
+
+  .log-output .metadata-block {
+    background-color: transparent !important;
+      max-height: 200px;
+      overflow: auto;
+      display: none;
+      outline: none !important;
+      border-bottom: none !important;
+      padding: 10px 10px !important;
+  }
+
+  .log-output .log-line.severity-WARNING.has-a:hover {
+    background: #e6bf31 !important;
+  }
+
+  .log-output .log-line.severity-WARNING.has-a:hover .metadata-block {
+    background: #e6bf31 !important;
+  }
+
+`;
+document.head.appendChild(styleEl);
