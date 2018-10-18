@@ -25,7 +25,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
 
     render() {
       return (
-        <div onClick={this.handleOnClick.bind(this)} className={"log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.hidden ? " hidden" : "")}>
+        <div onClick={this.handleOnClick.bind(this)} className={"log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.visible ? "" : " hidden")}>
           <div className="log-block">
             {
               this.props.metadata == null || this.props.metadata.length == 0 ? null : !this.state.expanded ? <a href="#" title="Expand Metadata Section" className="metadata-icon icon-plus-sign" /> : <a href="#" title="Collapse Metadata Section" className="metadata-icon icon-minus-sign" />
@@ -88,7 +88,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
               type: type,
               message: message,
               metadata: metadata,
-              hidden: false
+              visible: true
             });
           }
         }
@@ -96,10 +96,16 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
         me.setState({logs: newLogs});
       };
 
-      $('#filterText').on('input',function(e){
-        var text = e.target.value.toLowerCase();
-        me.setState({filter: text});
-      });
+			var wto;
+
+			$('#filterText').keyup(function(e) {
+				clearTimeout(wto);
+				wto = setTimeout(function() {
+					console.log(e.target.value);
+          var text = e.target.value.toLowerCase();
+          me.setState({filter: text});
+				}, 500);
+			});
 
       window.clearLog = me.clear;
       LogViewer.OutputPane.prototype.clear = me.clear;
@@ -113,18 +119,14 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
       let filteredLogs = [];
       let filter = this.state.filter;
 
-      if (filter != null && filter.length > 0) {
-        filteredLogs = this.state.logs.map((l) => {
-          l.hidden = !l.message.toLowerCase().includes(filter);
-          return l;
-        });
-      } else {
-        filteredLogs = this.state.logs;
-      }
+      filteredLogs = this.state.logs.map((l) => {
+        l.visible = (filter == null || filter.length == 0) || l.message.toLowerCase().includes(filter);
+        return l;
+      });
 
       let logs = [];
       for(let log of filteredLogs) {
-        logs.push(<Log hidden={log.hidden} date={log.date} time={log.time} type={log.type} message={log.message} metadata={log.metadata} />);
+        logs.push(<Log visible={log.visible} date={log.date} time={log.time} type={log.type} message={log.message} metadata={log.metadata} />);
       }
 
       return (

@@ -45,7 +45,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
       value: function render() {
         return React.createElement(
           "div",
-          { onClick: this.handleOnClick.bind(this), className: "log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.hidden ? " hidden" : "") },
+          { onClick: this.handleOnClick.bind(this), className: "log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.visible ? "" : " hidden") },
           React.createElement(
             "div",
             { className: "log-block" },
@@ -129,7 +129,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
               type: type,
               message: message,
               metadata: metadata,
-              hidden: false
+              visible: true
             });
           }
         }
@@ -137,9 +137,15 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
         me.setState({ logs: newLogs });
       };
 
-      $('#filterText').on('input', function (e) {
-        var text = e.target.value.toLowerCase();
-        me.setState({ filter: text });
+      var wto;
+
+      $('#filterText').keyup(function (e) {
+        clearTimeout(wto);
+        wto = setTimeout(function () {
+          console.log(e.target.value);
+          var text = e.target.value.toLowerCase();
+          me.setState({ filter: text });
+        }, 500);
       });
 
       window.clearLog = me.clear;
@@ -158,14 +164,10 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
         var filteredLogs = [];
         var filter = this.state.filter;
 
-        if (filter != null && filter.length > 0) {
-          filteredLogs = this.state.logs.map(function (l) {
-            l.hidden = !l.message.toLowerCase().includes(filter);
-            return l;
-          });
-        } else {
-          filteredLogs = this.state.logs;
-        }
+        filteredLogs = this.state.logs.map(function (l) {
+          l.visible = filter == null || filter.length == 0 || l.message.toLowerCase().includes(filter);
+          return l;
+        });
 
         var logs = [];
         var _iteratorNormalCompletion = true;
@@ -176,7 +178,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
           for (var _iterator = filteredLogs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var log = _step.value;
 
-            logs.push(React.createElement(Log, { hidden: log.hidden, date: log.date, time: log.time, type: log.type, message: log.message, metadata: log.metadata }));
+            logs.push(React.createElement(Log, { visible: log.visible, date: log.date, time: log.time, type: log.type, message: log.message, metadata: log.metadata }));
           }
         } catch (err) {
           _didIteratorError = true;
