@@ -1,4 +1,5 @@
 LogViewer.OutputPane.prototype.add = function( /*Map*/ data ) {}
+LogViewer.OutputPane.prototype.clear = function() {}
 
 $(".fetch-actions").append('<button onclick="window.clearLog()" id="clearLog" class="clear-logs">Clear Log</button>');
 $(".filter-actions").append('<div class="filter-text"><input placeholder="Search..." id="filterText"/></div>');
@@ -101,6 +102,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
       });
 
       window.clearLog = me.clear;
+      LogViewer.OutputPane.prototype.clear = me.clear;
     }
 
     clear() {
@@ -195,7 +197,7 @@ styleEl.innerHTML = `
   .filter-text input {
     border: 1px solid #aaa;
       min-width: 150px;
-      width: 30vw;
+      width: 20vw;
       margin-left: 5px;
       margin-top: 0px;
       border-radius: 4px;
@@ -236,7 +238,7 @@ styleEl.innerHTML = `
   }
 
   .log-output .log-line.severity-INFO {
-  	color: #1c96bd;
+  	color: #0a6684;
   }
   
   .log-output .log-line.severity-WARNING {
@@ -245,12 +247,20 @@ styleEl.innerHTML = `
   }
   
   .log-output .log-line.severity-ERROR, .log-output .log-line.severity-CRITICAL {
-	background: #FFA6A6 !important;
-	border-bottom: 1px solid #FF7171;
+    background: #FFA6A6 !important;
+    border-bottom: 1px solid #FF7171;
   }
 
   .log-output .log-line.severity-WARNING.has-a:hover {
     background: #e6bf31 !important;
+  }
+
+  .log-output .log-line.severity-ERROR.has-a:hover {
+    background: #FF7171 !important;
+  }
+  
+  .log-output .log-line.severity-CRITICAL.has-a:hover {
+    background: #BC0000 !important;
   }
 
   .log-output .log-line.severity-WARNING.has-a:hover .metadata-block {
