@@ -107,7 +107,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
 				}, 500);
 			});
 
-      window.maxLogs = null;
+      window.maxLogs = 1000;
       window.refreshLog = () => {
         me.setState({});
       }
@@ -138,6 +138,8 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
       for(let log of filteredLogs) {
         logRows.push(<Log visible={log.visible} date={log.date} time={log.time} type={log.type} message={log.message} metadata={log.metadata} />);
       }
+
+      $("#logCount").text(logRows.length + " / " + this.state.logs.length);
 
       return (
         <div className="log-output">

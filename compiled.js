@@ -148,7 +148,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
         }, 500);
       });
 
-      window.maxLogs = null;
+      window.maxLogs = 1000;
       window.refreshLog = function () {
         me.setState({});
       };
@@ -204,6 +204,8 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
             }
           }
         }
+
+        $("#logCount").text(logRows.length + " / " + this.state.logs.length);
 
         return React.createElement(
           "div",
