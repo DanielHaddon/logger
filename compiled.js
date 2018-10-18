@@ -183,14 +183,14 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
         var filter = this.state.filter;
         var logs = this.state.logs;
 
-        if (window.maxLogs && logs.length > window.maxLogs) {
-          logs = logs.slice(Math.max(logs.length - window.maxLogs, 0));
-        }
-
         filteredLogs = logs.map(function (l) {
           l.visible = filter == null || filter.length == 0 || l.message.toLowerCase().includes(filter);
           return l;
         });
+
+        if (window.maxLogs && filteredLogs.length > window.maxLogs) {
+          filteredLogs = filteredLogs.slice(Math.max(filteredLogs.length - window.maxLogs, 0));
+        }
 
         var logRows = [];
         var visibleCount = 0;

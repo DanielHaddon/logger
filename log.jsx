@@ -138,14 +138,14 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
       let filter = this.state.filter;
       let logs = this.state.logs;
 
-      if (window.maxLogs && logs.length > window.maxLogs) {
-        logs = logs.slice(Math.max(logs.length - window.maxLogs, 0))
-      }
-
       filteredLogs = logs.map((l) => {
         l.visible = (filter == null || filter.length == 0) || l.message.toLowerCase().includes(filter);
         return l;
       });
+
+      if (window.maxLogs && filteredLogs.length > window.maxLogs) {
+        filteredLogs = filteredLogs.slice(Math.max(filteredLogs.length - window.maxLogs, 0))
+      }
 
       let logRows = [];
       let visibleCount = 0;
