@@ -148,11 +148,21 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
       });
 
       let logRows = [];
+      let visibleCount = 0;
       for(let log of filteredLogs) {
         logRows.push(<Log visible={log.visible} date={log.date} time={log.time} type={log.type} message={log.message} metadata={log.metadata} />);
+        if (log.visible) {
+          visibleCount += 1;
+        }
       }
 
-      $("#logCount").text(logRows.length + " / " + this.state.logs.length);
+      let text = "Showing " + visibleCount;
+      if (this.state.logs.length != visibleCount) {
+        text += " of " + this.state.logs.length;
+      }
+      text += " logs";
+
+      $("#logCount").text(text);
 
       return (
         <div className="log-output">
@@ -345,7 +355,7 @@ styleEl.innerHTML = `
   .severity-TRACE, .severity-NOTICE {
     opacity:0.5;
   }
-  
+
   .options-pagesize {
     margin-left: 10px;
     margin-top: 2px;
