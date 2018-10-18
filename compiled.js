@@ -58,7 +58,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
       value: function render() {
         return React.createElement(
           "div",
-          { onClick: this.handleOnClick.bind(this), className: "log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.visible ? "" : " hidden") },
+          { onClick: this.handleOnClick.bind(this), className: "log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") },
           React.createElement(
             "div",
             { className: "log-block" },
@@ -141,8 +141,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
               time: time,
               type: type,
               message: message,
-              metadata: metadata,
-              visible: true
+              metadata: metadata
             });
           }
         }
@@ -183,9 +182,8 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
         var filter = this.state.filter;
         var logs = this.state.logs;
 
-        filteredLogs = logs.map(function (l) {
-          l.visible = filter == null || filter.length == 0 || l.message.toLowerCase().includes(filter);
-          return l;
+        filteredLogs = logs.filter(function (l) {
+          return filter == null || filter.length == 0 || l.message.toLowerCase().includes(filter);
         });
 
         if (window.maxLogs && filteredLogs.length > window.maxLogs) {
@@ -193,7 +191,6 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
         }
 
         var logRows = [];
-        var visibleCount = 0;
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
@@ -202,10 +199,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
           for (var _iterator = filteredLogs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var log = _step.value;
 
-            logRows.push(React.createElement(Log, { visible: log.visible, date: log.date, time: log.time, type: log.type, message: log.message, metadata: log.metadata }));
-            if (log.visible) {
-              visibleCount += 1;
-            }
+            logRows.push(React.createElement(Log, { date: log.date, time: log.time, type: log.type, message: log.message, metadata: log.metadata }));
           }
         } catch (err) {
           _didIteratorError = true;
@@ -222,8 +216,8 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
           }
         }
 
-        var text = "Showing " + visibleCount;
-        if (this.state.logs.length != visibleCount) {
+        var text = "Showing " + filteredLogs.length;
+        if (this.state.logs.length != filteredLogs.length) {
           text += " of " + this.state.logs.length;
         }
         text += " logs";

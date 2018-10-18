@@ -38,7 +38,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
 
     render() {
       return (
-        <div onClick={this.handleOnClick.bind(this)} className={"log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a") + (this.props.visible ? "" : " hidden")}>
+        <div onClick={this.handleOnClick.bind(this)} className={"log-line severity-" + this.props.type.toUpperCase() + (this.props.metadata == null ? "" : " has-a")}>
           <div className="log-block">
             {
               this.props.metadata == null || this.props.metadata.length == 0 ? null : !this.state.expanded ? <a href="#" title="Expand Metadata Section" className="metadata-icon icon-plus-sign" /> : <a href="#" title="Collapse Metadata Section" className="metadata-icon icon-minus-sign" />
@@ -100,8 +100,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
               time: time,
               type: type,
               message: message,
-              metadata: metadata,
-              visible: true
+              metadata: metadata
             });
           }
         }
@@ -138,9 +137,8 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
       let filter = this.state.filter;
       let logs = this.state.logs;
 
-      filteredLogs = logs.map((l) => {
-        l.visible = (filter == null || filter.length == 0) || l.message.toLowerCase().includes(filter);
-        return l;
+      filteredLogs = logs.filter(function (l) {
+        return filter == null || filter.length == 0 || l.message.toLowerCase().includes(filter);
       });
 
       if (window.maxLogs && filteredLogs.length > window.maxLogs) {
@@ -148,16 +146,12 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
       }
 
       let logRows = [];
-      let visibleCount = 0;
       for(let log of filteredLogs) {
-        logRows.push(<Log visible={log.visible} date={log.date} time={log.time} type={log.type} message={log.message} metadata={log.metadata} />);
-        if (log.visible) {
-          visibleCount += 1;
-        }
+        logRows.push(<Log date={log.date} time={log.time} type={log.type} message={log.message} metadata={log.metadata} />);        
       }
 
-      let text = "Showing " + visibleCount;
-      if (this.state.logs.length != visibleCount) {
+      let text = "Showing " + filteredLogs.length;
+      if (this.state.logs.length != filteredLogs.length) {
         text += " of " + this.state.logs.length;
       }
       text += " logs";
