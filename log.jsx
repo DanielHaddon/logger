@@ -7,9 +7,7 @@ $(".log-output-container").empty();
 window.logOutputContainer = $(".log-output-container")[0];
 window.filterTextInput = document.getElementById("filterText");
 
-import('https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js')
-.then(renderedScripty => {
-
+$.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", function() {
   class Log extends React.Component {
     constructor(props) {
       super(props);
@@ -140,7 +138,29 @@ import('https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js')
 
 var styleEl = document.createElement('style');
 styleEl.innerHTML = `
-  .log-block {
+.log-viewer-heading, .log-output-header, .toggle-show-hide-filters, .logo_image {
+	display: none;
+}
+
+#main {
+	top: 35px !important;
+    left: 38px !important;
+    background: white !important;
+}
+
+.logoheader {
+	height: 23px !important;
+}
+
+.user-profile {
+	right: 24px !important;
+}
+
+.module-logs .level-two {
+	display: none;
+}
+
+.log-block {
     padding-left: 110px;
     position: relative;
   }
@@ -158,10 +178,6 @@ styleEl.innerHTML = `
       min-height: 26px;
       vertical-align: top;
       padding-left: 18px;
-  }
-
-  .severity-INFO, .severity-TRACE, .severity-NOTICE {
-    opacity:0.4;
   }
 
   .filter-actions > * {
@@ -214,28 +230,39 @@ styleEl.innerHTML = `
       white-space: normal;
   }
 
-  .log-output .log-line:nth-child( odd ) {
-      background: #fff !important;
-  }
-
-  .log-output .log-line:nth-child( even ) {
-      background: #fff !important;
-  }
-
-  .log-output .log-line.severity-WARNING:nth-child( odd ) {
-      background: #FFED8B !important;
-  }
-
-  .log-output .log-line.severity-WARNING:nth-child( even ) {
-      background: #FFED8B !important;
-  }
-
   .log-output .log-line {
+      background: #fff !important;
     border-bottom: 1px solid #f2f4f6;
   }
 
+  .log-output .log-line.severity-INFO {
+  	color: #1c96bd;
+  }
+  
   .log-output .log-line.severity-WARNING {
+      background: #FFED8B !important;
     border-bottom: 1px solid #ead876;
+  }
+  
+  .log-output .log-line.severity-ERROR, .log-output .log-line.severity-CRITICAL {
+	background: #FFA6A6 !important;
+	border-bottom: 1px solid #FF7171;
+  }
+
+  .log-output .log-line.severity-WARNING.has-a:hover {
+    background: #e6bf31 !important;
+  }
+
+  .log-output .log-line.severity-WARNING.has-a:hover .metadata-block {
+    background: #e6bf31 !important;
+  }
+
+  .log-output .log-line.severity-ERROR.has-a:hover .metadata-block {
+    background: #FF7171 !important;
+  }
+  
+  .log-output .log-line.severity-CRITICAL.has-a:hover .metadata-block {
+    background: #BC0000 !important;
   }
 
   .log-output {
@@ -245,10 +272,6 @@ styleEl.innerHTML = `
 
   .log-output .log-line {
     cursor: default;
-  }
-
-  .log-output .log-line.has-a {
-    
   }
 
   .log-output .log-line.has-a:hover {
@@ -268,14 +291,6 @@ styleEl.innerHTML = `
       padding: 10px 10px !important;
   }
 
-  .log-output .log-line.severity-WARNING.has-a:hover {
-    background: #e6bf31 !important;
-  }
-
-  .log-output .log-line.severity-WARNING.has-a:hover .metadata-block {
-    background: #e6bf31 !important;
-  }
-
   @keyframes flash {
     0% { opacity: 0; }  
     50% { opacity: 1; background: #9e9ede; }
@@ -289,6 +304,9 @@ styleEl.innerHTML = `
   .log-output .metadata-block {
     display: block !important;
   }
-
+  
+  .severity-TRACE, .severity-NOTICE {
+    opacity:0.5;
+  }
 `;
 document.head.appendChild(styleEl);
