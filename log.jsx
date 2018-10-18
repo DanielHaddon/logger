@@ -5,6 +5,19 @@ $(".fetch-actions").append('<button onclick="window.clearLog()" id="clearLog" cl
 $(".filter-actions").append('<div class="filter-text"><input placeholder="Search..." id="filterText"/></div>');
 $(".log-output-container").empty();
 
+$(".filter-actions").append(`<div value="1000" class="options-pagesize"><select id="pageSize"><option>10</option><option>50</option><option>100</option><option>500</option><option selected="selected">1000</option><option>All</option></select></div>`);
+$(".filter-actions").append(`<div id="logCount" class="log-count">0 / 0</div>`);
+
+$("#pageSize").change(function(e) {
+  console.log(e.target.value);
+  if (isNaN(e.target.value)) {
+    window.maxLogs = null;
+  } else {
+    window.maxLogs = parseInt(e.target.value);
+  }
+  window.refreshLog();
+});
+
 window.logOutputContainer = $(".log-output-container")[0];
 window.filterTextInput = document.getElementById("filterText");
 
@@ -331,6 +344,16 @@ styleEl.innerHTML = `
   
   .severity-TRACE, .severity-NOTICE {
     opacity:0.5;
+  }
+  
+  .options-pagesize {
+    margin-left: 10px;
+    margin-top: 2px;
+  }
+  
+  .log-count {
+    margin-left: 10px;
+    padding-top: 2px;
   }
 `;
 document.head.appendChild(styleEl);
