@@ -107,6 +107,10 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
 				}, 500);
 			});
 
+      window.refreshLog = () => {
+        me.setState({});
+      }
+
       window.clearLog = me.clear;
       LogViewer.OutputPane.prototype.clear = me.clear;
     }
@@ -118,20 +122,26 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
     render() {
       let filteredLogs = [];
       let filter = this.state.filter;
+      let max = window.maxLogs;
+      let logs = this.state.logs;
 
-      filteredLogs = this.state.logs.map((l) => {
+      if (logs.length > max) {
+        logs = logs.slice(Math.max(arr.length - max, 0))
+      }
+
+      filteredLogs = logs.map((l) => {
         l.visible = (filter == null || filter.length == 0) || l.message.toLowerCase().includes(filter);
         return l;
       });
 
-      let logs = [];
+      let logRows = [];
       for(let log of filteredLogs) {
-        logs.push(<Log visible={log.visible} date={log.date} time={log.time} type={log.type} message={log.message} metadata={log.metadata} />);
+        logRows.push(<Log visible={log.visible} date={log.date} time={log.time} type={log.type} message={log.message} metadata={log.metadata} />);
       }
 
       return (
         <div className="log-output">
-          {logs}
+          {logRows}
         </div>
       );
     }

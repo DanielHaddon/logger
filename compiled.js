@@ -148,6 +148,10 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
         }, 500);
       });
 
+      window.refreshLog = function () {
+        me.setState({});
+      };
+
       window.clearLog = me.clear;
       LogViewer.OutputPane.prototype.clear = me.clear;
       return _this2;
@@ -163,13 +167,19 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
       value: function render() {
         var filteredLogs = [];
         var filter = this.state.filter;
+        var max = window.maxLogs;
+        var logs = this.state.logs;
 
-        filteredLogs = this.state.logs.map(function (l) {
+        if (logs.length > max) {
+          logs = logs.slice(Math.max(arr.length - max, 0));
+        }
+
+        filteredLogs = logs.map(function (l) {
           l.visible = filter == null || filter.length == 0 || l.message.toLowerCase().includes(filter);
           return l;
         });
 
-        var logs = [];
+        var logRows = [];
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
@@ -178,7 +188,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
           for (var _iterator = filteredLogs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var log = _step.value;
 
-            logs.push(React.createElement(Log, { visible: log.visible, date: log.date, time: log.time, type: log.type, message: log.message, metadata: log.metadata }));
+            logRows.push(React.createElement(Log, { visible: log.visible, date: log.date, time: log.time, type: log.type, message: log.message, metadata: log.metadata }));
           }
         } catch (err) {
           _didIteratorError = true;
@@ -198,7 +208,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/react.min.js", 
         return React.createElement(
           "div",
           { className: "log-output" },
-          logs
+          logRows
         );
       }
     }]);
